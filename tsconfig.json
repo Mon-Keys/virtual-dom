@@ -1,7 +1,17 @@
 {
     "compilerOptions": {
+      "jsx": "react",
+      "module": "es6",
       "target": "es5",
-      "module": "commonjs",
-      "sourceMap": true
+      "moduleResolution": "node",
+      "jsxFactory": "jsxFactory",
+      "allowJs": true,
+      "outDir": "./public",
+      "baseUrl": "source",
+      "paths" : {
+        "jsx/*": [
+          "jsx/*"
+        ]
+      }
     }
 }
