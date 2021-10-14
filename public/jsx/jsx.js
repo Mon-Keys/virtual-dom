@@ -40,3 +40,42 @@ export var jsxFactory = function (tagName, props) {
         }, []),
     };
 };
+export var createElement = function (virtualNode) {
+    if (typeof virtualNode === 'string') {
+        return document.createTextNode(virtualNode);
+    }
+    var rootElement = document.createElement(virtualNode.tagName);
+    virtualNode.props && Object.keys(virtualNode.props).forEach(function (key) {
+        rootElement.setAttribute(key, virtualNode.props[key]);
+    });
+    virtualNode.children.map(createElement).forEach(function (childElement) {
+        rootElement.appendChild(childElement);
+    });
+    return rootElement;
+};
+var changed = function (nodeA, nodeB) {
+    return (typeof nodeA !== typeof nodeB ||
+        typeof nodeA === 'string' && nodeA !== nodeB ||
+        nodeA.type !== nodeB.type);
+};
+export var update = function (root, currentNode, nextNode, index) {
+    if (index === void 0) { index = 0; }
+    if (!nextNode) {
+        root.removeChild(root.childNodes[index]);
+    }
+    else if (!currentNode) {
+        root.appendChild(createElement(nextNode));
+    }
+    else if (changed(currentNode, nextNode)) {
+        console.log(root);
+        console.log("!!!!!!!!");
+        root.replaceChild(createElement(nextNode), root.childNodes[index]);
+    }
+    else if (typeof nextNode !== 'string') {
+        var max = Math.max(currentNode.children.length, nextNode.children.length);
+        console.log(max);
+        for (var i = 0; i < max; i++) {
+            update(root.childNodes[index], currentNode.children[i], nextNode.children[i], i);
+        }
+    }
+};
