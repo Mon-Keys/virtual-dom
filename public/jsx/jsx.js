@@ -1,37 +1,13 @@
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
-var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
-    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
-        if (ar || !(i in from)) {
-            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
-            ar[i] = from[i];
-        }
-    }
-    return to.concat(ar || Array.prototype.slice.call(from));
-};
-export var jsxFactory = function (tagName, props) {
-    var children = [];
-    for (var _i = 2; _i < arguments.length; _i++) {
-        children[_i - 2] = arguments[_i];
-    }
-    if (typeof tagName === 'function') {
-        return __assign({}, tagName(props));
+export const jsxFactory = (type, props, ...children) => {
+    if (typeof type === 'function') {
+        return Object.assign({}, type(props));
     }
     return {
-        tagName: tagName,
-        props: props,
-        children: children.reduce(function (acc, el) {
+        type,
+        props,
+        children: children.reduce((acc, el) => {
             if (Array.isArray(el)) {
-                return __spreadArray(__spreadArray([], acc, true), el, true);
+                return [...acc, ...el];
             }
             else {
                 acc.push(el);
@@ -40,42 +16,40 @@ export var jsxFactory = function (tagName, props) {
         }, []),
     };
 };
-export var createElement = function (virtualNode) {
+export function createElement(virtualNode) {
     if (typeof virtualNode === 'string') {
         return document.createTextNode(virtualNode);
     }
-    var rootElement = document.createElement(virtualNode.tagName);
-    virtualNode.props && Object.keys(virtualNode.props).forEach(function (key) {
+    const rootElement = document.createElement(virtualNode.type);
+    virtualNode.props && Object.keys(virtualNode.props).forEach((key) => {
         rootElement.setAttribute(key, virtualNode.props[key]);
     });
-    virtualNode.children.map(createElement).forEach(function (childElement) {
+    virtualNode.children.map(createElement).forEach((childElement) => {
         rootElement.appendChild(childElement);
     });
     return rootElement;
-};
-var changed = function (nodeA, nodeB) {
-    return (typeof nodeA !== typeof nodeB ||
+}
+const changed = (nodeA, nodeB) => {
+    const a = (typeof nodeA !== typeof nodeB ||
         typeof nodeA === 'string' && nodeA !== nodeB ||
         nodeA.type !== nodeB.type);
+    // console.log(nodeA, nodeB, a);
+    return a;
 };
-export var update = function (root, currentNode, nextNode, index) {
-    if (index === void 0) { index = 0; }
+export function update(rootElement, currNode, nextNode, index = 0) {
     if (!nextNode) {
-        root.removeChild(root.childNodes[index]);
+        rootElement.removeChild(rootElement.childNodes[index]);
     }
-    else if (!currentNode) {
-        root.appendChild(createElement(nextNode));
+    else if (!currNode) {
+        rootElement.appendChild(createElement(nextNode));
     }
-    else if (changed(currentNode, nextNode)) {
-        console.log(root);
-        console.log("!!!!!!!!");
-        root.replaceChild(createElement(nextNode), root.childNodes[index]);
+    else if (changed(currNode, nextNode)) {
+        const newElem = createElement(nextNode);
+        rootElement.replaceChild(createElement(nextNode), rootElement.childNodes[index]);
     }
     else if (typeof nextNode !== 'string') {
-        var max = Math.max(currentNode.children.length, nextNode.children.length);
-        console.log(max);
-        for (var i = 0; i < max; i++) {
-            update(root.childNodes[index], currentNode.children[i], nextNode.children[i], i);
+        for (let i = 0; i < Math.max(currNode.children.length, nextNode.children.length); i++) {
+            update(rootElement.childNodes[index], currNode.children[i], nextNode.children[i], i);
         }
     }
-};
+}
