@@ -17,9 +17,9 @@ type spaHandler struct {
 
 func (h spaHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(r.URL.Path)
-	if (r.URL.Path == "/jsx/jsx") {
+	if (r.URL.Path == "/VirtualDOM/VirtualDOM") {
 		fmt.Println("!!!!!!!!!!!!");
-		r.URL.Path = "/jsx/jsx.js"
+		r.URL.Path = "/VirtualDOM/VirtualDOM.js"
 	}
 	path, err := filepath.Abs(r.URL.Path)
 	

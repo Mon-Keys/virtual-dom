@@ -1,7 +1,6 @@
   
 export namespace MonkeysVirtualDOM {  
   export type Props = { [key: string]: any };
-
   export const jsxFactory = (
       type: string | Function,
       props: Props,
@@ -38,16 +37,16 @@ export namespace MonkeysVirtualDOM {
       return rootElement;
     }
 
-  const changed = (nodeA, nodeB) => {
-      const a: boolean =  (
-          typeof nodeA !== typeof nodeB ||
-          typeof nodeA === 'string' && nodeA !== nodeB ||
-          nodeA.type !== nodeB.type
-      );
-      return a;
+  const changed = (nodeA, nodeB): boolean => {
+      return (
+        typeof nodeA !== typeof nodeB ||
+        typeof nodeA === 'string' && nodeA !== nodeB ||
+        nodeA.type !== nodeB.type ||
+        nodeA.props !== nodeB.props
+    );
   }
 
-  export const update = ($rootElement, currNode,nextNode,  index=0) => {
+  export const update = ($rootElement: string | HTMLElement, currNode,nextNode,  index: number = 0) => {
     let manipulationMapStack = [];
     const updateElement = ($rootElement, currNode, nextNode, index=0) => {
         if (!nextNode) {
@@ -82,7 +81,7 @@ export namespace MonkeysVirtualDOM {
     }
     updateElement($rootElement, currNode, nextNode, index);
     
-    // console.log(manipulationMapStack);
+    console.log(manipulationMapStack);
 
     manipulationMapStack.map((manipulation) => {
       switch (manipulation.method){
