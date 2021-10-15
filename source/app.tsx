@@ -1,10 +1,9 @@
-import { jsxFactory, createElement,  update } from "./jsx/jsx";
+import { MonkeysVirtualDOM } from "./jsx/jsx";
 
 const render = (virtualRoot, root) => {
-  console.log(root.childNodes);
-
-  root.appendChild(createElement(virtualRoot));
+  root.appendChild(MonkeysVirtualDOM.createElement(virtualRoot));
 }
+
 
 const $root = document.getElementById('app');
 const app = (
@@ -17,7 +16,9 @@ const app = (
 const app2 = (
   <div>
     <div><span>1</span></div>
-    <div><span>10</span></div>
+    <div><span>10</span>
+    <span>10</span>
+    </div>
     <div><span>3</span></div>
     <div><span>4</span></div>
     <div><span>5</span></div>
@@ -27,10 +28,11 @@ const app2 = (
 render(app,$root);
 
 let counter = 0;
+
 setInterval(() => {
   if (counter++ % 2 == 0) {
-    update($root, app, app2);
+    MonkeysVirtualDOM.update($root, app, app2);
   } else {
-    update($root, app2, app);
+    MonkeysVirtualDOM.update($root, app2, app);
   }
 }, 1000);

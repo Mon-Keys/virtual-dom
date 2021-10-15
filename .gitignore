@@ -1,2 +1,3 @@
 #ts compiled files
 public/**/*.js
+public/jsx/
