@@ -2,7 +2,6 @@
 export namespace MonkeysVirtualDOM {  
   export type Props = { [key: string]: any };
 
-  
   export const jsxFactory = (
       type: string | Function,
       props: Props,

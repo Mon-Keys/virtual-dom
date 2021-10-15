@@ -1,3 +1,4 @@
 *.js
 **/*.js
-jsx/jsx.js
+public/jsx/jsx.js
+public/jsx/
