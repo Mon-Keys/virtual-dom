@@ -22,7 +22,7 @@ export namespace MonkeysVirtualDOM {
           }, []),
       };
   };
-
+  
   export const createElement = (virtualNode) => {
       if (typeof virtualNode === 'string') {
         return document.createTextNode(virtualNode);
@@ -30,6 +30,10 @@ export namespace MonkeysVirtualDOM {
       const rootElement = document.createElement(virtualNode.type);
       virtualNode.props && Object.keys(virtualNode.props).forEach((key) => {
         rootElement.setAttribute(key, virtualNode.props[key]);
+        if(/^on/.test(key)){
+          console.log('event added');
+          rootElement.addEventListener(key.slice(2), virtualNode.props[key]);
+        }
       });
       virtualNode.children.map(createElement).forEach((childElement) => {
         rootElement.appendChild(childElement);
@@ -46,7 +50,7 @@ export namespace MonkeysVirtualDOM {
     );
   }
 
-  export const update = ($rootElement: string | HTMLElement, currNode,nextNode,  index: number = 0) => {
+  export const update = ($rootElement: string | HTMLElement, currNode,nextNode, index: number = 0) => {
     let manipulationMapStack = [];
     const updateElement = ($rootElement, currNode, nextNode, index=0) => {
         if (!nextNode) {
